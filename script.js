@@ -1792,18 +1792,27 @@ function renderVisibleTraitValue(character, trait, isPublic, options = {}) {
 }
 
 function renderVisibilityBadge(playerNumber, isPublic) {
+  // SVG icons for lock states
+  const closedLockSvg = `<svg class="trait-lock-svg trait-lock-closed" viewBox="0 0 24 24" width="1.25rem" height="1.25rem" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" fill="none" stroke="#ff4d4d" stroke-width="2.5"/><path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="#ff4d4d" stroke-width="2.5"/></svg>`;
+  const openLockSvg = `<svg class="trait-lock-svg trait-lock-open" viewBox="0 0 24 24" width="1.25rem" height="1.25rem" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" fill="none" stroke="#4ade80" stroke-width="2.5"/><path d="M7 11V7a5 5 0 0 1 9.9-1" fill="none" stroke="#4ade80" stroke-width="2.5"/></svg>`;
+
+  // If trait is revealed to all, show green open lock
   if (isPublic) {
-    return `<span class="visibility-badge public">Открыто всем</span>`;
+    return openLockSvg;
   }
 
+  // For own player's row: show red closed lock if not revealed
   if (isOwnPlayer(playerNumber)) {
-    return `<span class="visibility-badge private">Только вы</span>`;
+    return closedLockSvg;
   }
 
+  // For others' rows: if not revealed, cell must be completely empty
+  // Host view: show red closed lock for hidden traits
   if (isHostView()) {
-    return `<span class="visibility-badge host icon-only" aria-label="Скрыто от игроков" title="Скрыто от игроков">🔒</span>`;
+    return closedLockSvg;
   }
 
+  // Others' rows with hidden traits: empty cell
   return "";
 }
 
@@ -2094,18 +2103,24 @@ function getHealthExplanation(health) {
 }
 
 function renderLockButton(playerNumber, traitKey, label, isDisabled = false) {
+  // SVG closed lock icon
+  const closedLockSvg = `<svg class="trait-lock-svg" viewBox="0 0 24 24" width="1.25rem" height="1.25rem" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>`;
+  
   return `
     <button class="trait-lock" type="button" data-action="reveal-trait" data-player="${playerNumber}" data-trait="${traitKey}" aria-label="Открыть ${label}" ${isDisabled ? "disabled" : ""}>
-      🔒
+      ${closedLockSvg}
     </button>
   `;
 }
 
 function renderTraitRevealAction(playerNumber, traitKey, label) {
   const disabled = !(currentLobby && currentLobby.isGameStarted ? isCharacterActive(playerNumber) && isOwnPlayer(playerNumber) : canRevealTrait(playerNumber));
+  // SVG closed lock icon
+  const closedLockSvg = `<svg class="trait-lock-svg" viewBox="0 0 24 24" width="1.25rem" height="1.25rem" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>`;
+  
   return `
     <button class="trait-mini-action" type="button" data-action="reveal-trait" data-player="${playerNumber}" data-trait="${traitKey}" aria-label="Открыть ${label} для всех" ${disabled ? "disabled" : ""}>
-      🔒
+      ${closedLockSvg}
     </button>
   `;
 }
@@ -2442,18 +2457,18 @@ function formatBunker(bunker, themeId = "classic") {
   const resourceSection = themeId === "classic"
     ? `
       <div class="bunker-resources bunker-resources--classic">
-        <h4>Ресурсы</h4>
+        <h4>Ресурсы выживания</h4>
         <ul class="detail-list">
-          <li><strong>Срок внутри:</strong> ${escapeHtml(String(durationValue))} мес.</li>
-          <li><strong>Еда:</strong> ${escapeHtml(String(foodValue))} мес.</li>
+          <li><strong>Срок пребывания:</strong> ${escapeHtml(String(durationValue))} мес.</li>
+          <li><strong>Запас еды:</strong> ${escapeHtml(String(foodValue))} мес.</li>
         </ul>
       </div>
     `
     : `
       <div class="bunker-resources ${lowResourceWarning ? "low-resource" : ""}">
-        <h4>Ресурсы</h4>
-        <div class="resource-row"><span>Срок внутри:</span> <strong>${escapeHtml(String(durationValue))} мес.</strong></div>
-        <div class="resource-row"><span>Еда:</span> <strong>${escapeHtml(String(foodValue))} / ${escapeHtml(String(durationValue))} мес.</strong></div>
+        <h4>Ресурсы выживания</h4>
+        <div class="resource-row"><span>Срок пребывания:</span> <strong>${escapeHtml(String(durationValue))} мес.</strong></div>
+        <div class="resource-row"><span>Запас еды:</span> <strong>${escapeHtml(String(foodValue))} / ${escapeHtml(String(durationValue))} мес.</strong></div>
         <div class="resource-bar">
           <div class="resource-bar__fill" style="width:${resourceRatio}%;"></div>
         </div>

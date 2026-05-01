@@ -1011,18 +1011,18 @@ function formatBunker(bunker, themeId = "classic") {
   const resourceSection = themeId === "classic"
     ? `
       <div class="bunker-resources bunker-resources--classic">
-        <h4>Ресурсы</h4>
+        <h4>Ресурсы выживания</h4>
         <ul class="detail-list">
-          <li><strong>Срок внутри:</strong> ${escapeHtml(String(durationValue))} мес.</li>
-          <li><strong>Еда:</strong> ${escapeHtml(String(foodValue))} мес.</li>
+          <li><strong>Срок пребывания:</strong> ${escapeHtml(String(durationValue))} мес.</li>
+          <li><strong>Запас еды:</strong> ${escapeHtml(String(foodValue))} мес.</li>
         </ul>
       </div>
     `
     : `
       <div class="bunker-resources ${lowResourceWarning ? "low-resource" : ""}">
-        <h4>Ресурсы</h4>
-        <div class="resource-row"><span>Срок внутри:</span> <strong>${escapeHtml(String(durationValue))} мес.</strong></div>
-        <div class="resource-row"><span>Еда:</span> <strong>${escapeHtml(String(foodValue))} / ${escapeHtml(String(durationValue))} мес.</strong></div>
+        <h4>Ресурсы выживания</h4>
+        <div class="resource-row"><span>Срок пребывания:</span> <strong>${escapeHtml(String(durationValue))} мес.</strong></div>
+        <div class="resource-row"><span>Запас еды:</span> <strong>${escapeHtml(String(foodValue))} / ${escapeHtml(String(durationValue))} мес.</strong></div>
         <div class="resource-bar">
           <div class="resource-bar__fill" style="width:${resourceRatio}%;"></div>
         </div>
